@@ -115,16 +115,18 @@ void build_tree(vector<flat*> elms, node* obj, int axis){
     // cout << obj -> left << endl;
     build_tree(l, obj -> left, n_ax);
     build_tree(r, obj -> right, n_ax);
+  } else {
+    obj -> elements = elms;
   }
 }
 
 int main(){
   point* p1 = new point(0,0,0);
-  point* p2 = new point(3,0,0);
-  point* p3 = new point(0,3,0);
-  point* p4 = new point(0,0,3);
-  point* p5 = new point(3,0,2);
-  point* p6 = new point(0,3,2);
+  point* p2 = new point(0,3,0);
+  point* p3 = new point(0,0,3);
+  point* p4 = new point(3,0,0);
+  point* p5 = new point(3,3,2);
+  point* p6 = new point(2,3,0);
 
   vector<flat*> v;
   v.push_back(new flat(p1, p2, p3));
@@ -136,6 +138,7 @@ int main(){
 
   cout << root << endl;
   //cout << root -> left -> elements[0] << endl;
+  //cout << v[0] <<endl;
   //cout << root -> right << endl;
    return 0;
 }
