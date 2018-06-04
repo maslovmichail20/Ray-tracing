@@ -1,3 +1,6 @@
+#ifndef ASSIGNMENT_6_ADM_FLAT_H
+#define ASSIGNMENT_6_ADM_FLAT_H
+
 #include <iostream>
 
 float comparator(float, float, float, int);
@@ -15,7 +18,7 @@ struct point{
     coor[2] = z;
   }
   void print(){
-    std::cout << "x: " << coor[0];
+    std::cout << " x: " << coor[0];
     std::cout << " y: " << coor[1];
     std::cout << " z: " << coor[2] << std::endl;
   }
@@ -39,3 +42,5 @@ struct flat{
     }
   }
 };
+
+#endif //ASSIGNMENT_6_ADM_FLAT_H

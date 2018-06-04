@@ -1,4 +1,3 @@
-#include <iostream>
 #include "flat.h"
 
 using namespace std;
