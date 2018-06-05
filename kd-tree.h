@@ -6,6 +6,7 @@
 #include <climits>
 #include "flat.h"
 #include <cmath>
+#include <unistd.h>
 
 using namespace std;
 
@@ -55,9 +56,23 @@ struct node{
 };
 
 void build_tree(vector<flat*> elms, node* obj, int axis){
-//  cout << "NODE axis: " << axis << endl;
-  int delim = SAH(elms, obj -> min -> coor[axis], obj -> max -> coor[axis], axis);
-  obj -> delimiter = elms[delim] -> min_p -> coor[axis];
+  //cout << "Start" << endl;
+  //cout << "wtf";
+  //cout << "NODE axis: " << axis << endl;
+  //cout << elms.size() << endl;
+  //int delim = SAH(elms, obj -> min -> coor[axis], obj -> max -> coor[axis], axis);
+  //cout << elms[0] << endl;
+  //obj -> delimiter = elms[delim] -> min_p -> coor[axis];
+  //cout << "found SAH" << endl;
+  //cout << axis << endl;
+  //cout << "wtf";
+  //obj -> min ->print();
+  //obj -> max ->print();
+  obj -> delimiter = (obj -> min -> coor[axis] + obj -> max -> coor[axis])/2;
+  //cout << obj -> delimiter << endl;
+  //obj -> min -> print();
+  //obj -> max -> print();
+  //cout << "DELIM: " <<  obj -> delimiter << endl;
   vector<flat*> l;
   vector<flat*> r;
   for (int i = 0; i < elms.size(); i++){
@@ -72,23 +87,33 @@ void build_tree(vector<flat*> elms, node* obj, int axis){
       r.push_back(elms[i]);
     }
   }
+  //cout << "left array: " << l.size() << endl;
+  //cout << "right array: " << r.size() << endl;
+  //sleep(1);
+  //cout << "Middle" << endl;
   if (elms.size() != l.size() && elms.size() != r.size()){
     point *middle_l = new point(obj -> max -> coor[0], obj -> max -> coor[1], obj -> max -> coor[2]);
     point *middle_r = new point(obj -> min -> coor[0], obj -> min -> coor[1], obj -> min -> coor[2]);
 
     middle_l -> coor[axis] = obj -> delimiter;
     middle_r -> coor[axis] = obj -> delimiter;
+
+    // cout << l.size() << endl;
+    // cout << r.size() << endl;
+
     int n_ax = axis == 2 ? 0 : ++axis;
     obj -> left = new node(n_ax, obj -> min, middle_l);
     obj -> right = new node(n_ax, middle_r, obj -> max);
-    build_tree(l, obj -> left, n_ax);
-    build_tree(r, obj -> right, n_ax);
+    if (l.size() > 1) build_tree(l, obj -> left, n_ax);
+    if (r.size() > 1) build_tree(r, obj -> right, n_ax);
   } else {
     obj -> elements = elms;
   }
+  //cout << "Finish" << endl;
 }
 
 bool RIB(point* A, point* B, point* min, point* max){
+  //cout << "HERE" << endl;
   for (int i = 0; i < 3; i++){
     int j = i == 2 ? 0 : i + 1;
     int k = j == 2 ? 0 : j + 1;
@@ -114,94 +139,104 @@ bool RIB(point* A, point* B, point* min, point* max){
   return false;
 }
 
-bool ray_in_box(point* A, point* B, point* min, point* max){
-  float x0 = min -> coor[0];
-  float y0 = min -> coor[1];
-  float z0 = min -> coor[2];
-
-  float x1 = max -> coor[0];
-  float y1 = max -> coor[1];
-  float z1 = max -> coor[2];
-
-  float x = A -> coor[0];
-  float y = A -> coor[1];
-  float z = A -> coor[2];
-
-  point* vector = new point(0,0,0);
-
-  float swap;
-  float len = 0;
-
-  for (int i = 0; i < 3; i++){
-    vector -> coor[i] = B -> coor[i] - A -> coor[i];
-    len += ((vector -> coor[i])*(vector -> coor[i]));
-  }
-  len = sqrt(len);
-
-  for (int i = 0; i < 3; i++){
-    vector -> coor[i] /= len;
-  }
-
-  float Tnear = - INT_MAX;
-  float Tfar = INT_MAX;
-
-  if (vector -> coor[0] == 0){
-    if (x > x1 || x < x0){
-      return false;
-    }
-  } else {
-    Tnear = (x - x0) / vector -> coor[0];
-    Tfar = (x - x1) / vector -> coor[0];
-    if (Tnear > Tfar) swap_(&Tnear, &Tfar);
-  }
-
-  if (vector -> coor[1] == 0){
-    if (y > y1 || y < y0){
-      return false;
-    }
-  }else{
-    float T1y = (y - y0) / vector -> coor[1];
-    float T2y = (y - y1) / vector -> coor[1];
-
-    if (T1y > T2y) swap_(&T1y, &T2y);
-    if (T1y > Tnear) Tnear = T1y;
-    if (T2y < Tfar) Tfar = T2y;
-  }
-
-  if (Tnear > Tfar || Tfar < 0) return false;
-
-  if (vector -> coor[2] == 0){
-    if (z > z1 || z < z0){
-      return false;
-    }
-  } else {
-    float T1z = (z - z0) / vector -> coor[2];
-    float T2z = (z - z1) / vector -> coor[2];
-
-    if (T1z > T2z) swap_(&T1z, &T2z);
-    if (T1z > Tnear) Tnear = T1z;
-    if (T2z < Tfar) Tfar = T2z;
-  }
-
-  if (Tnear > Tfar || Tfar == 0) return false;
-
-  return true;
-
-}
+// bool ray_in_box(point* A, point* B, point* min, point* max){
+//   float x0 = min -> coor[0];
+//   float y0 = min -> coor[1];
+//   float z0 = min -> coor[2];
+//
+//   float x1 = max -> coor[0];
+//   float y1 = max -> coor[1];
+//   float z1 = max -> coor[2];
+//
+//   float x = A -> coor[0];
+//   float y = A -> coor[1];
+//   float z = A -> coor[2];
+//
+//   point* vector = new point(0,0,0);
+//
+//   float swap;
+//   float len = 0;
+//
+//   for (int i = 0; i < 3; i++){
+//     vector -> coor[i] = B -> coor[i] - A -> coor[i];
+//     len += ((vector -> coor[i])*(vector -> coor[i]));
+//   }
+//   len = sqrt(len);
+//
+//   for (int i = 0; i < 3; i++){
+//     vector -> coor[i] /= len;
+//   }
+//
+//   float Tnear = - INT_MAX;
+//   float Tfar = INT_MAX;
+//
+//   if (vector -> coor[0] == 0){
+//     if (x > x1 || x < x0){
+//       return false;
+//     }
+//   } else {
+//     Tnear = (x - x0) / vector -> coor[0];
+//     Tfar = (x - x1) / vector -> coor[0];
+//     if (Tnear > Tfar) swap_(&Tnear, &Tfar);
+//   }
+//
+//   if (vector -> coor[1] == 0){
+//     if (y > y1 || y < y0){
+//       return false;
+//     }
+//   }else{
+//     float T1y = (y - y0) / vector -> coor[1];
+//     float T2y = (y - y1) / vector -> coor[1];
+//
+//     if (T1y > T2y) swap_(&T1y, &T2y);
+//     if (T1y > Tnear) Tnear = T1y;
+//     if (T2y < Tfar) Tfar = T2y;
+//   }
+//
+//   if (Tnear > Tfar || Tfar < 0) return false;
+//
+//   if (vector -> coor[2] == 0){
+//     if (z > z1 || z < z0){
+//       return false;
+//     }
+//   } else {
+//     float T1z = (z - z0) / vector -> coor[2];
+//     float T2z = (z - z1) / vector -> coor[2];
+//
+//     if (T1z > T2z) swap_(&T1z, &T2z);
+//     if (T1z > Tnear) Tnear = T1z;
+//     if (T2z < Tfar) Tfar = T2z;
+//   }
+//
+//   if (Tnear > Tfar || Tfar == 0) return false;
+//
+//   return true;
+//
+// }
 
 vector<flat*> search_in_tree(point* A, point* B, node* obj){
-  if (obj -> left == nullptr){
+  // A -> print();
+  // B -> print();
+  // obj -> min -> print();
+  // obj -> max -> print();
+  // cout << "PAPAM";
+  if (obj -> left == nullptr && obj -> right == nullptr){
     return obj -> elements;
   }
+  //cout << "NEXT" <<endl;
   vector<flat*> result;
-  if (RIB(A, B, obj -> left -> min, obj -> left -> max)){
+  if (obj -> left != nullptr && RIB(A, B, obj -> left -> min, obj -> left -> max)){
+    //cout << "GOIING LEFT" << endl;
     vector<flat*> res1 = search_in_tree(A, B, obj -> left);
     result.insert(result.end(), res1.begin(), res1.end());
   }
-  if (RIB(A, B, obj -> right -> min, obj -> right -> max)){
+  //cout << "NEXT" <<endl;
+  if (obj -> right != nullptr && RIB(A, B, obj -> right -> min, obj -> right -> max)){
+    //cout << "GOIING RIGHT" << endl;
     vector<flat*> res2 = search_in_tree(A, B, obj -> right);
     result.insert(result.end(), res2.begin(), res2.end());
   }
+  //cout << "RET";
   return result;
 }
 

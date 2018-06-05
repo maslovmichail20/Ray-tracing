@@ -18,7 +18,12 @@ void simpleRayTracing(
     node* root = new node(0, min_, max_);
     vector<flat*> v = createFlatArray(vertexes, figures);
 
+    root -> min -> print();
+    root -> max -> print();
+
     build_tree(v, root, 0);
+
+    //cout << "Built" << endl;
 
     double x, y, z, dx, dy, dz;
     x = dc->canvas[0][0];
@@ -33,7 +38,16 @@ void simpleRayTracing(
         for (int j = 0 ; j < dc->widthPx ; j++) {
             curX += dx; curY += dy;
             auto curP = new point(curX, curY, z);
-            vector<flat*> resFlats = search_in_tree(camera, curP, root);
+            vector<flat*> resFlats;
+            //cout << "Before search" << endl;
+            if(RIB(camera, curP, root -> min, root -> max)){
+              //cout << "MIDDLE" << endl;
+              //camera -> print();
+              //curP -> print();
+              resFlats = search_in_tree(camera, curP, root);
+              //cout << "returned" << endl;
+            }
+          //  cout << "After search" << endl;
 
             vector<double> curPoint(3, 0);
             curPoint[0] = curX;
