@@ -10,6 +10,7 @@ class DisplayControl {
 public:
     DisplayControl(vector<double>&, vector<double>&, string);
     vector<double> camera;
+    vector<double> light;
     vector<vector<double>> canvas;
     unsigned int widthPx;
     unsigned int heightPx;

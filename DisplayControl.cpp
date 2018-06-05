@@ -32,6 +32,11 @@ DisplayControl::DisplayControl(
     canvas[1][1] = 1;
     canvas[1][2] = 1;
 
+    light = empty;
+    light[0] = 2;
+    light[1] = -1;
+    light[2] = 1;
+
     dx = 0;
     dy = width/widthPx;
     dz = height/heightPx;

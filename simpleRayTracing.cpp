@@ -1,4 +1,5 @@
 #include "simpleRayTracing.h"
+#include "color.h"
 #include <iostream>
 #include <cmath>
 
@@ -8,6 +9,7 @@ void simpleRayTracing(
         DisplayControl* ds,
         vector<vector<double>>& vertexes,
         vector<vector<int>>& figures,
+        vector<vector<double>>& normals,
         bitmap_image* bmp
 ) {
     double x, y, z, dx, dy, dz;
@@ -26,11 +28,26 @@ void simpleRayTracing(
             curPoint[1] = curY;
             curPoint[2] = z;
 
+            int numberOfNearest = -1;
+            double distance = 1000;
+
             for (int k = 0 ; k < figures.size() ; k++) {
-                if (rayIntersectTriangle(ds->camera, curPoint, vertexes, figures[k])) {
-                    bmp->set_pixel(j, i, 0, 0, 0);
-                    break;
+                double curDistance = rayIntersectTriangle(ds->camera, curPoint, vertexes, figures[k]);
+                if (curDistance != 0 && curDistance < distance) {
+                    distance = curDistance;
+                    numberOfNearest = k;
                 }
+            }
+
+            if (numberOfNearest > -1 && distance != 1000) {
+                int rgb = getColor(
+                        ds->camera,
+                        curPoint,
+                        ds->light,
+                        distance,
+                        normals[numberOfNearest]
+                );
+                bmp->set_pixel(j, i, rgb, rgb, rgb);
             }
         }
         z -= dz;
@@ -39,7 +56,7 @@ void simpleRayTracing(
 
 
 // Möller–Trumbore intersection algorithm
-bool rayIntersectTriangle(
+double rayIntersectTriangle(
         vector<double> &rayOrigin,
         vector<double> &rayVector,
         vector<vector<double>>& vertexes,
@@ -55,18 +72,19 @@ bool rayIntersectTriangle(
 
     vector<double> h = crossProduct(rayVector, edge2);
     double a = dotProduct(edge1, h);
-    if (a > -E && a < E) return false;
+    if (a > -E && a < E) return 0;
 
     double f = 1/a;
     vector<double> s = subtract(rayOrigin, vertex0);
     double u = f * dotProduct(s, h);
-    if (u < 0 || u > 1) return false;
+    if (u < 0 || u > 1) return -0;
 
     vector<double> q = crossProduct(s, edge1);
     double v = f * dotProduct(rayVector, q);
-    if (v < 0 || u + v > 1) return false;
+    if (v < 0 || u + v > 1) return 0;
 
     double t = f * dotProduct(edge2, q);
-
-    return abs(t) > E;
+    if (abs(t) > E) {
+        return abs(t);
+    } else return 0;
 }

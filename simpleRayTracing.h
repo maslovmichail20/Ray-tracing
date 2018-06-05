@@ -12,10 +12,11 @@ void simpleRayTracing(
                 DisplayControl*,
                 vector<vector<double>>&,
                 vector<vector<int>>&,
+                vector<vector<double>>&,
                 bitmap_image*
 );
 
-bool rayIntersectTriangle(
+double rayIntersectTriangle(
                 vector<double>&,
                 vector<double>&,
                 vector<vector<double>>&,

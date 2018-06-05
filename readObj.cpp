@@ -8,7 +8,8 @@ void readObj(char *fileName,
              vector<double> &minCoords,
              vector<double> &maxCoords,
              vector<vector<double>> *vertices,
-             vector<vector<int>> *flats
+             vector<vector<int>> *flats,
+             std::vector<std::vector<double>> *normals
 ) {
     double minX = 1000, maxX = -1000;
     double minY = 1000, maxY = -1000;
@@ -23,6 +24,8 @@ void readObj(char *fileName,
 
             for (int j = 0; j < curMesh.Vertices.size(); j++) {
                 vector<double> curV(3, 0);
+                vector<double> curN(3, 0);
+
                 curV[0] = curMesh.Vertices[j].Position.X;
                 curV[1] = curMesh.Vertices[j].Position.Y;
                 curV[2] = curMesh.Vertices[j].Position.Z;
@@ -36,7 +39,12 @@ void readObj(char *fileName,
                 minZ = minZ < curV[2] ? minZ : curV[2];
                 maxZ = maxZ > curV[2] ? maxZ : curV[2];
 
+                curN[0] = curMesh.Vertices[j].Normal.X;
+                curN[1] = curMesh.Vertices[j].Normal.Y;
+                curN[2] = curMesh.Vertices[j].Normal.Z;
+
                 vertices->push_back(curV);
+                normals->push_back(curN);
             }
             for (int j = 0; j < curMesh.Indices.size(); j += 3) {
                 vector<int> newIntV;
