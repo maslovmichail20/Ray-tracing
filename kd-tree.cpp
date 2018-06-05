@@ -132,6 +132,32 @@ void build_tree(vector<flat*> elms, node* obj, int axis){
   }
 }
 
+bool RIB(point* A, point* B, point* min, point* max){
+  for (int i = 0; i < 3; i++){
+    int j = i == 2 ? 0 : i + 1;
+    int k = j == 2 ? 0 : j + 1;
+
+    float t1 = (min -> coor[i] - A -> coor[i]) / (B -> coor[i] - A -> coor[i]);
+    float t2 = (max -> coor[i] - A -> coor[i]) / (B -> coor[i] - A -> coor[i]);
+
+    float n1_1 = t1 * (B -> coor[j] - A -> coor[j]) + A -> coor[j];
+    float n1_2 = t2 * (B -> coor[j] - A -> coor[j]) + A -> coor[j];
+
+    float n2_1 = t1 * (B -> coor[k] - A -> coor[k]) + A -> coor[k];
+    float n2_2 = t2 * (B -> coor[k] - A -> coor[k]) + A -> coor[k];
+
+    if (n1_1 >= min -> coor[j] && n1_1 <= max -> coor[j] && n2_1 >= min -> coor[k] && n2_1 <= max -> coor[k]){
+      //cout << "HERE" << endl;
+      return true;
+    }
+    if (n1_2 >= min -> coor[j] && n1_2 <= max -> coor[j] && n2_2 >= min -> coor[k] && n2_2 <= max -> coor[k]){
+      //cout << "HERE" << endl;
+      return true;
+    }
+  }
+  return false;
+}
+
 bool ray_in_box(point* A, point* B, point* min, point* max){
   float x0 = min -> coor[0];
   float y0 = min -> coor[1];
@@ -215,11 +241,11 @@ vector<flat*> search_in_tree(point* A, point* B, node* obj){
     return obj -> elements;
   }
   vector<flat*> result;
-  if (ray_in_box(A, B, obj -> left -> min, obj -> left -> max)){
+  if (RIB(A, B, obj -> left -> min, obj -> left -> max)){
     vector<flat*> res1 = search_in_tree(A, B, obj -> left);
     result.insert(result.end(), res1.begin(), res1.end());
   }
-  if (ray_in_box(A, B, obj -> right -> min, obj -> right -> max)){
+  if (RIB(A, B, obj -> right -> min, obj -> right -> max)){
     vector<flat*> res2 = search_in_tree(A, B, obj -> right);
     result.insert(result.end(), res2.begin(), res2.end());
   }
@@ -248,28 +274,23 @@ int main(){
 
   build_tree(v, root, 0);
 
-  root -> min -> print();
-  root -> max -> print();
-
-  cout << endl;
-
-  root -> left -> min -> print();
-  root -> left -> max -> print();
-
-  cout << endl;
-
-  root -> right -> min -> print();
-  root -> right -> max -> print();
+  // root -> min -> print();
+  // root -> max -> print();
+  //
+  // cout << endl;
+  //
+  // root -> left -> min -> print();
+  // root -> left -> max -> print();
+  //
+  // cout << endl;
+  //
+  // root -> right -> min -> print();
+  // root -> right -> max -> print();
 
   cout << ray_in_box(A, B, min, max) << endl;
+  cout << RIB(A, B, min, max) << endl;
 
-  vector<flat*> res = search_in_tree(A, B, root);
+  //vector<flat*> res = search_in_tree(A, B, root);
 
-  cout << v[1] << endl;
-  cout << res[0] << endl;
-  //cout << root << endl;
-  //cout << root -> left -> elements[0] << endl;
-  //cout << v[0] <<endl;
-  //cout << root -> right << endl;
    return 0;
 }
