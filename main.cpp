@@ -20,7 +20,7 @@ int main() {
     DisplayControl* DC = new DisplayControl(minCoordinate, maxCoordinate, "sd");
     bitmap_image *image = new bitmap_image(DC->widthPx,DC->heightPx);
     image->set_all_channels(255, 255, 255);
-    simpleRayTracing(DC, vertices, flats, image);
+    simpleRayTracing(DC, minCoordinate, maxCoordinate, vertices, flats, image);
     image->save_image("output.bmp");
 
     return 0;

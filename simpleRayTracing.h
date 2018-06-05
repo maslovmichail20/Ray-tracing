@@ -11,6 +11,8 @@ using namespace std;
 
 void simpleRayTracing(
                 DisplayControl*,
+                vector<double>&,
+                vector<double>&,
                 vector<vector<double>>&,
                 vector<vector<int>>&,
                 bitmap_image*

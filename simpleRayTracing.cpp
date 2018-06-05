@@ -7,13 +7,15 @@ using namespace std;
 
 void simpleRayTracing(
         DisplayControl* dc,
+        vector<double> &min,
+        vector<double> &max,
         vector<vector<double>>& vertexes,
         vector<vector<int>>& figures,
         bitmap_image* bmp
 ) {
-    auto min = new point(dc->canvas[0][0], dc->canvas[0][1], dc->canvas[0][2]);
-    auto max = new point(dc->canvas[1][0], dc->canvas[1][1], dc->canvas[1][2]);
-    node* root = new node(0, min, max);
+    auto min_ = new point(min[0], min[1], min[2]);
+    auto max_ = new point(max[0], max[1], max[2]);
+    node* root = new node(0, min_, max_);
     vector<flat*> v = createFlatArray(vertexes, figures);
 
     build_tree(v, root, 0);
