@@ -1,5 +1,5 @@
 #include "readObj.h"
-#include "OBJ_Loader.h"
+#include "../libraries/OBJ_Loader.h"
 #include <iostream>
 
 using namespace std;

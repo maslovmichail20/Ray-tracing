@@ -4,7 +4,7 @@
 #include <vector>
 #include "geometry.h"
 #include "DisplayControl.h"
-#include "bitmap_image.hpp"
+#include "../libraries/bitmap_image.hpp"
 
 using namespace std;
 
