@@ -8,8 +8,9 @@ using namespace std;
 
 struct Box {
     Box(int, vector<double>&, vector<double>&, vector<double>&);
-    vector<double> min_p;
-    vector<double> max_p;
+    double min_p[3];
+    double max_p[3];
+    double center[3];
     int flatIndex;
     ~Box();
 };
@@ -17,9 +18,9 @@ struct Box {
 vector<Box*> createBoxesArray(vector<vector<double>>&, vector<vector<int>>&);
 
 struct Node {
-    Node(vector<double>&, vector<double>&);
-    vector<double> min_coor;
-    vector<double> max_coor;
+    Node(double[3], double[3]);
+    double min_coor[3];
+    double max_coor[3];
     Node* left;
     Node* right;
     int axis;
@@ -30,13 +31,18 @@ struct Node {
 
 class KD_tree {
 public:
-    KD_tree(vector<double>&, vector<double>&, vector<Box*>&);
+    KD_tree(double[3], double[3], vector<Box*>);
     Node* root;
     void buildTree(Node*);
-    bool rayIntersectNode();
+    vector<Box*> rayIntersectNode(vector<double>&, vector<double>&, Node*);
     void show(Node*);
     ~KD_tree();
 };
+
+
+void swap_vector(vector<Box*>&, int, int);
+int partition(vector<Box*>&, int, int, int);
+void quick_sort(vector<Box*>& , int, int, int);
 
 
 

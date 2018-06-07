@@ -10,6 +10,7 @@ void simpleRayTracing(
         vector<vector<double>>& vertexes,
         vector<vector<int>>& figures,
         vector<vector<double>>& normals,
+        KD_tree* kd,
         bitmap_image* bmp
 ) {
     double x, y, z, dx, dy, dz;
@@ -31,11 +32,25 @@ void simpleRayTracing(
             int numberOfNearest = -1;
             double distance = 1000;
 
-            for (int k = 0 ; k < figures.size() ; k++) {
-                double curDistance = rayIntersectTriangle(ds->camera, curPoint, vertexes, figures[k]);
+            vector<Box*> res = kd->rayIntersectNode(ds->camera, curPoint, kd->root);
+
+//            for (int k = 0 ; k < figures.size() ; k++) {
+//                double curDistance = rayIntersectTriangle(ds->camera, curPoint, vertexes, figures[k]);
+//                if (curDistance != 0 && curDistance < distance) {
+//                    distance = curDistance;
+//                    numberOfNearest = k;
+//                }
+//            }
+
+            for (int k = 0 ; k < res.size() ; k++) {
+                double curDistance = rayIntersectTriangle(
+                        ds->camera,
+                        curPoint,
+                        vertexes,
+                        figures[res[k]->flatIndex]);
                 if (curDistance != 0 && curDistance < distance) {
                     distance = curDistance;
-                    numberOfNearest = k;
+                    numberOfNearest = res[k]->flatIndex;
                 }
             }
 
@@ -70,7 +85,9 @@ double rayIntersectTriangle(
     vector<double> edge1 = subtract(vertex1, vertex0);
     vector<double> edge2 = subtract(vertex2, vertex0);
 
-    vector<double> h = crossProduct(rayVector, edge2);
+    vector<double> dir = subtract(rayVector, rayOrigin);
+
+    vector<double> h = crossProduct(dir, edge2);
     double a = dotProduct(edge1, h);
     if (a > -E && a < E) return 0;
 
@@ -80,7 +97,7 @@ double rayIntersectTriangle(
     if (u < 0 || u > 1) return -0;
 
     vector<double> q = crossProduct(s, edge1);
-    double v = f * dotProduct(rayVector, q);
+    double v = f * dotProduct(dir, q);
     if (v < 0 || u + v > 1) return 0;
 
     double t = f * dotProduct(edge2, q);

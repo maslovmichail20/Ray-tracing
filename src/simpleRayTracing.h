@@ -5,6 +5,8 @@
 #include "geometry.h"
 #include "DisplayControl.h"
 #include "../libraries/bitmap_image.hpp"
+#include "KD_tree.h"
+
 
 using namespace std;
 
@@ -13,6 +15,7 @@ void simpleRayTracing(
                 vector<vector<double>>&,
                 vector<vector<int>>&,
                 vector<vector<double>>&,
+                KD_tree*,
                 bitmap_image*
 );
 

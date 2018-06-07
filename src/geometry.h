@@ -22,6 +22,8 @@ vector<double> multiply(vector<double>&, double);
 
 double cosBetweenVectors(vector<double>&, vector<double>&);
 
+double rayIntersectBox(vector<double>&, vector<double>&, double[3], double[3]);
+
 
 
 
