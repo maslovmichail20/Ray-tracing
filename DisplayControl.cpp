@@ -10,33 +10,33 @@ DisplayControl::DisplayControl(
         vector<double> &max,
         string resolution
 ) {
-    width = 2;
-    height = 2;
+    width = 1;
+    height = 1;
 
-    widthPx = 500;
-    heightPx = 500;
+    widthPx = 128;
+    heightPx = 128;
 
     vector<double> empty(3, 0);
     camera = empty;
-    camera[0] = 3;
-    camera[1] = 1;
+    camera[0] = 5;
+    camera[1] = 0;
     camera[2] = 0;
 
     vector<vector<double>> empty2(2, empty);
     canvas = empty2;
-    canvas[0][0] = 2;
-    canvas[0][1] = -1;
-    canvas[0][2] = -1;
+    canvas[0][0] = 4;
+    canvas[0][1] = -0.5;
+    canvas[0][2] = -0.5;
 
-    canvas[1][0] = 2;
-    canvas[1][1] = 1;
-    canvas[1][2] = 1;
+    canvas[1][0] = 4;
+    canvas[1][1] = 0.5;
+    canvas[1][2] = 0.5;
 
     dx = 0;
     dy = width/widthPx;
     dz = height/heightPx;
 }
 
-DisplayControl::~DisplayControl() {
-
-}
+// DisplayControl::~DisplayControl() {
+//
+// }

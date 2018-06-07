@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include "kd-tree.h"
+#include "limits.h"
 
 using namespace std;
 
@@ -18,12 +19,13 @@ void simpleRayTracing(
     node* root = new node(0, min_, max_);
     vector<flat*> v = createFlatArray(vertexes, figures);
 
-    root -> min -> print();
-    root -> max -> print();
+    int *count = new int;
+    *count = 0;
+    build_tree(v, root, 0, count);
 
-    build_tree(v, root, 0);
 
-    //cout << "Built" << endl;
+    cout << "Built " << *count << " nodes" << endl;
+
 
     double x, y, z, dx, dy, dz;
     x = dc->canvas[0][0];
@@ -39,15 +41,11 @@ void simpleRayTracing(
             curX += dx; curY += dy;
             auto curP = new point(curX, curY, z);
             vector<flat*> resFlats;
-            //cout << "Before search" << endl;
-            if(RIB(camera, curP, root -> min, root -> max)){
-              //cout << "MIDDLE" << endl;
-              //camera -> print();
-              //curP -> print();
-              resFlats = search_in_tree(camera, curP, root);
-              //cout << "returned" << endl;
+
+            if(ray_in_box(camera, curP, root -> min, root -> max)!= INT_MAX){
+               resFlats = search_in_tree(camera, curP, root);
+               cout << resFlats.size() << endl;
             }
-          //  cout << "After search" << endl;
 
             vector<double> curPoint(3, 0);
             curPoint[0] = curX;
@@ -56,6 +54,7 @@ void simpleRayTracing(
 
             for (int k = 0 ; k < resFlats.size() ; k++) {
                 if (rayIntersectTriangle(dc->camera, curPoint, resFlats[k])) {
+                    //cout << "Intersection" << endl;
                     bmp->set_pixel(j, i, 0, 0, 0);
                     break;
                 }
@@ -117,8 +116,9 @@ bool rayIntersectTriangle(
 
     vector<double> edge1 = subtract(vertex1, vertex0);
     vector<double> edge2 = subtract(vertex2, vertex0);
+    vector<double> dir = subtract(rayVector, rayOrigin);
 
-    vector<double> h = crossProduct(rayVector, edge2);
+    vector<double> h = crossProduct(dir, edge2);
     double a = dotProduct(edge1, h);
     if (a > -E && a < E) return false;
 
@@ -128,43 +128,10 @@ bool rayIntersectTriangle(
     if (u < 0 || u > 1) return false;
 
     vector<double> q = crossProduct(s, edge1);
-    double v = f * dotProduct(rayVector, q);
+    double v = f * dotProduct(dir, q);
     if (v < 0 || u + v > 1) return false;
 
     double t = f * dotProduct(edge2, q);
 
     return abs(t) > E;
 }
-
-// Möller–Trumbore intersection algorithm
-//bool rayIntersectTriangle(
-//        vector<double> &rayOrigin,
-//        vector<double> &rayVector,
-//        vector<vector<double>>& vertexes,
-//        vector<int>& flat
-//) {
-//    const double E = 0.0000001;
-//    vector<double> vertex0 = vertexes[flat[0]];
-//    vector<double> vertex1 = vertexes[flat[1]];
-//    vector<double> vertex2 = vertexes[flat[2]];
-//
-//    vector<double> edge1 = subtract(vertex1, vertex0);
-//    vector<double> edge2 = subtract(vertex2, vertex0);
-//
-//    vector<double> h = crossProduct(rayVector, edge2);
-//    double a = dotProduct(edge1, h);
-//    if (a > -E && a < E) return false;
-//
-//    double f = 1/a;
-//    vector<double> s = subtract(rayOrigin, vertex0);
-//    double u = f * dotProduct(s, h);
-//    if (u < 0 || u > 1) return false;
-//
-//    vector<double> q = crossProduct(s, edge1);
-//    double v = f * dotProduct(rayVector, q);
-//    if (v < 0 || u + v > 1) return false;
-//
-//    double t = f * dotProduct(edge2, q);
-//
-//    return abs(t) > E;
-//}
