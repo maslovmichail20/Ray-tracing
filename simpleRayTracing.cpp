@@ -44,7 +44,6 @@ void simpleRayTracing(
 
             if(ray_in_box(camera, curP, root -> min, root -> max)!= INT_MAX){
                resFlats = search_in_tree(camera, curP, root);
-               cout << resFlats.size() << endl;
             }
 
             vector<double> curPoint(3, 0);
