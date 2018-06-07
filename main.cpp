@@ -22,7 +22,7 @@ int main() {
     vector<Box*> allBoxes = createBoxesArray(vertices, flats);
     KD_tree* kd = new KD_tree(minCoordinate.data(), maxCoordinate.data(), allBoxes);
     kd->buildTree(kd->root);
-    kd->show(kd->root);
+//    kd->show(kd->root);
     DisplayControl* DC = new DisplayControl(minCoordinate, maxCoordinate, "sd");
     bitmap_image *image = new bitmap_image(DC->widthPx,DC->heightPx);
     image->set_all_channels(255, 255, 255);
