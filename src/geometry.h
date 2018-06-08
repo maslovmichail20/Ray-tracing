@@ -30,9 +30,12 @@ vector<double> multiply(vector<double>&, double);
 
 double cosBetweenVectors(vector<double>&, vector<double>&);
 
-//double rayIntersectBox(vector<double>&, vector<double>&, double[3], double[3]);
-
-
+double rayIntersectTriangle(
+        vector<double> &rayOrigin,
+        vector<double> &rayVector,
+        vector<vector<double>>& vertexes,
+        vector<int>& flat
+);
 
 
 #endif //ASSIGNMENT_6_ADM_GEOMETRY_H

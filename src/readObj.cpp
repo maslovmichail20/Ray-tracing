@@ -7,9 +7,9 @@ using namespace std;
 void readObj(char *fileName,
              vector<double> &minCoords,
              vector<double> &maxCoords,
-             vector<vector<double>> *vertices,
-             vector<vector<int>> *flats,
-             std::vector<std::vector<double>> *normals
+             vector<vector<double>> &vertices,
+             vector<vector<int>> &flats,
+             std::vector<std::vector<double>> &normals
 ) {
     double minX = 1000, maxX = -1000;
     double minY = 1000, maxY = -1000;
@@ -39,19 +39,25 @@ void readObj(char *fileName,
                 minZ = minZ < curV[2] ? minZ : curV[2];
                 maxZ = maxZ > curV[2] ? maxZ : curV[2];
 
-                curN[0] = curMesh.Vertices[j].Normal.X;
-                curN[1] = curMesh.Vertices[j].Normal.Y;
-                curN[2] = curMesh.Vertices[j].Normal.Z;
-
-                vertices->push_back(curV);
-                normals->push_back(curN);
+                vertices.push_back(curV);
             }
             for (int j = 0; j < curMesh.Indices.size(); j += 3) {
-                vector<int> newIntV;
-                newIntV.push_back(curMesh.Indices[j]);
-                newIntV.push_back(curMesh.Indices[j+1]);
-                newIntV.push_back(curMesh.Indices[j+2]);
-                flats->push_back(newIntV);
+                vector<int> f;
+                f.push_back(curMesh.Indices[j]);
+                f.push_back(curMesh.Indices[j+1]);
+                f.push_back(curMesh.Indices[j+2]);
+                flats.push_back(f);
+
+                vector<double> a = vertices[f[0]];
+                vector<double> b = vertices[f[1]];
+                vector<double> c = vertices[f[2]];
+
+                vector<double> n(3, 0);
+                n[0] = (b[1] - a[1])*(c[2] - a[2]) - (b[2] - a[2])*(c[1] - a[1]);
+                n[1] = (c[0] - a[0])*(b[2] - a[2]) - (b[0] - a[0])*(c[2] - a[2]);
+                n[2] = (b[0] - a[0])*(c[1] - a[1]) - (c[0] - a[0])*(b[1] - a[1]);
+
+                normals.push_back(n);
             }
         }
         minCoords[0] = minX; minCoords[1] = minY; minCoords[2] = minZ;

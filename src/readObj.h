@@ -7,9 +7,9 @@
 void readObj(char*,
              std::vector<double>&,
              std::vector<double>&,
-             std::vector<std::vector<double>>*,
-             std::vector<std::vector<int>>*,
-             std::vector<std::vector<double>>*
+             std::vector<std::vector<double>>&,
+             std::vector<std::vector<int>>&,
+             std::vector<std::vector<double>>&
 );
 
 

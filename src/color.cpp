@@ -30,5 +30,5 @@ int getColor(
 
     double angleCos = cosBetweenVectors(normal, lightV);
 
-    return int(254 - 190*angleCos);
+    return int(244 - 190*angleCos);
 }

@@ -2,10 +2,9 @@
 #define ASSIGNMENT_6_ADM_SIMPLERAYTRACING_H
 
 #include <vector>
-#include "geometry.h"
 #include "DisplayControl.h"
-#include "../libraries/bitmap_image.hpp"
 #include "flat.h"
+#include "../libraries/bitmap_image.hpp"
 
 using namespace std;
 
@@ -19,14 +18,7 @@ void simpleRayTracing(
                 bitmap_image*
 );
 
-vector<flat*> createFlatArray(vector<vector<double>>&, vector<vector<int>>&, vector<vector<double>>&);
-
-double rayIntersectTriangle(
-        vector<double> &rayOrigin,
-        vector<double> &rayVector,
-        vector<vector<double>>& vertexes,
-        vector<int>& flat
-);
+vector<flat*> createFlatArray(vector<vector<double>>&, vector<vector<int>>&);
 
 
 #endif //ASSIGNMENT_6_ADM_SIMPLERAYTRACING_H
