@@ -26,7 +26,7 @@ void simpleRayTracing(
     point* min_p = new point(min[0], min[1], min[2]);
     point* max_p = new point(max[0], max[1], max[2]);
     node* root = new node(0, min_p, max_p);
-    build_tree(createFlatArray(vertices, flats), root, 0, 0);
+    build_tree(createFlatArray(vertices, flats, normals), root, 0, 0);
 
     point* camera = new point(dc->camera[0], dc->camera[1], dc->camera[2]);
 
@@ -67,7 +67,7 @@ void simpleRayTracing(
                         distance,
                         normals[numberOfNearest]
                 );
-                bmp->set_pixel(j, i, rgb, rgb, rgb);
+                bmp->set_pixel(j, i, 0, 0, rgb);
             }
         }
         z -= dz;
@@ -75,7 +75,9 @@ void simpleRayTracing(
 }
 
 vector<flat*> createFlatArray(vector<vector<double>> &vertices,
-                              vector<vector<int>> &flats)
+                              vector<vector<int>> &flats,
+                              vector<vector<double>> &normals
+)
 {
     vector<flat*> elements(flats.size(), nullptr);
     for (int i = 0 ; i < flats.size() ; i++) {
@@ -91,6 +93,13 @@ vector<flat*> createFlatArray(vector<vector<double>> &vertices,
                           vertices[flats[i][2]][2]),
                 i
         );
+        vector<double> a = vertices[flats[i][0]];
+        vector<double> b = vertices[flats[i][1]];
+        vector<double> c = vertices[flats[i][2]];
+
+        normals[i][0] = (b[1] - a[1])*(c[2] - a[2]) - (b[2] - a[2])*(c[1] - a[1]);
+        normals[i][1] = (c[0] - a[0])*(b[2] - a[2]) - (b[0] - a[0])*(c[2] - a[2]);
+        normals[i][2] = (b[0] - a[0])*(c[1] - a[1]) - (c[0] - a[0])*(b[1] - a[1]);
     }
     return elements;
 }

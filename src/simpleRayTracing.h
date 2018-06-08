@@ -19,7 +19,7 @@ void simpleRayTracing(
                 bitmap_image*
 );
 
-vector<flat*> createFlatArray(vector<vector<double>>&, vector<vector<int>>&);
+vector<flat*> createFlatArray(vector<vector<double>>&, vector<vector<int>>&, vector<vector<double>>&);
 
 double rayIntersectTriangle(
         vector<double> &rayOrigin,

@@ -16,7 +16,7 @@ int main() {
     vector<double> minCoordinate(3, 0);
     vector<double> maxCoordinate(3, 0);
 
-    readObj("./models/cow.obj", minCoordinate, maxCoordinate, &vertices, &flats, &normals);
+    readObj("./models/dolphin.obj", minCoordinate, maxCoordinate, &vertices, &flats, &normals);
 
     DisplayControl* DC = new DisplayControl(minCoordinate, maxCoordinate);
     bitmap_image *image = new bitmap_image(DC->widthPx,DC->heightPx);
