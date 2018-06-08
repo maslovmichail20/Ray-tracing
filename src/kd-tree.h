@@ -16,7 +16,7 @@ struct node{
   point* min;
   point* max;
   vector<flat*> elements;
-  float delimiter;
+  double delimiter;
   node* left;
   node* right;
   node (int a, point* _min, point* _max){
@@ -28,7 +28,7 @@ struct node{
   }
 };
 
-void build_tree(vector<flat*>, node*, int, int, int*);
+void build_tree(vector<flat*>, node*, int, int);
 
 vector<flat*> search_in_tree(point*, point*, node*);
 

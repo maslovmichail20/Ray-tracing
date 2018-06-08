@@ -7,7 +7,7 @@
 #include "geometry.h"
 #include "kd-tree.h"
 
-void build_tree(vector<flat*> elms, node* obj, int axis, int count, int* c){
+void build_tree(vector<flat*> elms, node* obj, int axis, int count){
   //(*c)++;
   quick_sort_first(elms, 0, elms.size() - 1, axis);
   int middle = elms.size() / 2;
@@ -40,14 +40,13 @@ void build_tree(vector<flat*> elms, node* obj, int axis, int count, int* c){
     obj -> left = new node(n_ax, obj -> min, middle_l);
     obj -> right = new node(n_ax, middle_r, obj -> max);
 
-    (*c)+=2;
 
-    build_tree(l, obj -> left, n_ax, 0, c);
-    build_tree(r, obj -> right, n_ax, 0, c);
+    build_tree(l, obj -> left, n_ax, 0);
+    build_tree(r, obj -> right, n_ax, 0);
 
   } else{
     if (count < 2){
-      build_tree(elms, obj, n_ax, ++count, c);
+      build_tree(elms, obj, n_ax, ++count);
     } else {
       obj -> elements = elms;
     }
@@ -60,10 +59,10 @@ vector<flat*> search_in_tree(point* A, point* B, node* obj){
   }
   vector<flat*> res1;
   vector<flat*> res2;
-  if (obj -> left != nullptr && ray_in_box(A, B, obj -> left -> min, obj -> left -> max) != INT_MAX){
+  if (obj -> left != nullptr && ray_in_box(A, B, obj -> left -> min, obj -> left -> max) != -1){
     res1 = search_in_tree(A, B, obj -> left);
   }
-  if (obj -> right != nullptr && ray_in_box(A, B, obj -> right -> min, obj -> right -> max) != INT_MAX ){
+  if (obj -> right != nullptr && ray_in_box(A, B, obj -> right -> min, obj -> right -> max) != -1){
     res2 = search_in_tree(A, B, obj -> right);
     res1.insert(res1.end(), res2.begin(), res2.end());
   }

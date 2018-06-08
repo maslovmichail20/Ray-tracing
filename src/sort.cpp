@@ -1,8 +1,5 @@
 #include "sort.h"
 
-//using namespace std;
-
-
 int partition_first(vector<flat*>& arr, int f, int l, int axis){
   int i = f - 1;
   flat* x = arr[l];
@@ -12,7 +9,6 @@ int partition_first(vector<flat*>& arr, int f, int l, int axis){
       flat* swap = arr[i];
       arr[i] = arr[j];
       arr[j] = swap;
-      //swap(&arr[i], &arr[j]);
     }
   }
   arr[l] = arr[i + 1];

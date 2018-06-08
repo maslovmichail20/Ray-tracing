@@ -136,16 +136,16 @@ vector<Box*> KD_tree::rayIntersectNode(
         return node->boxes;
     }
 
-    double left = rayIntersectBox(rayOrigin,
-                                  rayVector,
-                                  node->left->min_coor,
-                                  node->left->max_coor
-    );
-    double right = rayIntersectBox(rayOrigin,
-                                   rayVector,
-                                   node->right->min_coor,
-                                   node->right->max_coor
-    );
+//    double left = rayIntersectBox(rayOrigin,
+//                                  rayVector,
+//                                  node->left->min_coor,
+//                                  node->left->max_coor
+//    );
+//    double right = rayIntersectBox(rayOrigin,
+//                                   rayVector,
+//                                   node->right->min_coor,
+//                                   node->right->max_coor
+//    );
 
     vector<Box*> empty = vector<Box*>();
 

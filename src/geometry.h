@@ -17,9 +17,10 @@ vector<double> subtract(vector<double>&, vector<double>);
 double dotProduct(vector<double>&, vector<double>&);
 
 vector<double> crossProduct(vector<double>&, vector<double>&);
-void swap_(float*, float*);
-float ray_in_box(point*, point*, point*, point*);
-int SAH(vector<flat*>, float, float, int);
+
+void swap_(double*, double*);
+
+double ray_in_box(point*, point*, point*, point*);
 
 double vectorLength(vector<double>&);
 
@@ -29,7 +30,7 @@ vector<double> multiply(vector<double>&, double);
 
 double cosBetweenVectors(vector<double>&, vector<double>&);
 
-double rayIntersectBox(vector<double>&, vector<double>&, double[3], double[3]);
+//double rayIntersectBox(vector<double>&, vector<double>&, double[3], double[3]);
 
 
 

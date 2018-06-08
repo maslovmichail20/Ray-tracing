@@ -1,64 +1,69 @@
 #include "simpleRayTracing.h"
 #include "color.h"
+#include "kd-tree.h"
+#include "flat.h"
+#include <vector>
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 
 void simpleRayTracing(
-        DisplayControl* ds,
-        vector<vector<double>>& vertexes,
-        vector<vector<int>>& figures,
+        DisplayControl* dc,
+        vector<double>& min,
+        vector<double>& max,
+        vector<vector<double>>& vertices,
+        vector<vector<int>>& flats,
         vector<vector<double>>& normals,
-        KD_tree* kd,
         bitmap_image* bmp
 ) {
     double x, y, z, dx, dy, dz;
-    x = ds->canvas[0][0];
-    y = ds->canvas[0][1];
-    z = ds->canvas[1][2];
+    x = dc->canvas[0][0];
+    y = dc->canvas[0][1];
+    z = dc->canvas[1][2];
+    dx = dc->dx; dy = dc->dy; dz = dc->dz;
 
-    dx = ds->dx; dy = ds->dy; dz = ds->dz;
+    point* min_p = new point(min[0], min[1], min[2]);
+    point* max_p = new point(max[0], max[1], max[2]);
+    node* root = new node(0, min_p, max_p);
+    build_tree(createFlatArray(vertices, flats), root, 0, 0);
 
-    for (int i = 0 ; i < ds->heightPx ; i++) {
+    point* camera = new point(dc->camera[0], dc->camera[1], dc->camera[2]);
+
+    for (int i = 0 ; i < dc->heightPx ; i++) {
         double curX = x; double curY = y;
-        for (int j = 0 ; j < ds->widthPx ; j++) {
-            vector<double> curPoint(3, 0);
+        for (int j = 0 ; j < dc->widthPx ; j++) {
             curX += dx; curY += dy;
-            curPoint[0] = curX;
-            curPoint[1] = curY;
-            curPoint[2] = z;
+            point* curPoint = new point(curX, curY, z);
+
+            vector<flat*> res;
+            if (ray_in_box(camera, curPoint, root->min, root->max) != -1) {
+                res = search_in_tree(camera, curPoint, root);
+            }
 
             int numberOfNearest = -1;
-            double distance = 1000;
+            double distance = 10000;
 
-            vector<Box*> res = kd->rayIntersectNode(ds->camera, curPoint, kd->root);
-
-//            for (int k = 0 ; k < figures.size() ; k++) {
-//                double curDistance = rayIntersectTriangle(ds->camera, curPoint, vertexes, figures[k]);
-//                if (curDistance != 0 && curDistance < distance) {
-//                    distance = curDistance;
-//                    numberOfNearest = k;
-//                }
-//            }
+            vector<double> cp(3, 0);
+            for (int i = 0 ; i < 3 ; i++) cp[i] = curPoint->coor[i];
 
             for (int k = 0 ; k < res.size() ; k++) {
                 double curDistance = rayIntersectTriangle(
-                        ds->camera,
-                        curPoint,
-                        vertexes,
-                        figures[res[k]->flatIndex]);
-                if (curDistance != 0 && curDistance < distance) {
+                        dc->camera,
+                        cp,
+                        vertices,
+                        flats[res[k]->flatIndex]);
+                if (curDistance != -1 && curDistance < distance) {
                     distance = curDistance;
                     numberOfNearest = res[k]->flatIndex;
                 }
             }
 
-            if (numberOfNearest > -1 && distance != 1000) {
+            if (numberOfNearest > -1 && distance != 10000) {
                 int rgb = getColor(
-                        ds->camera,
-                        curPoint,
-                        ds->light,
+                        dc->camera,
+                        cp,
+                        dc->light,
                         distance,
                         normals[numberOfNearest]
                 );
@@ -69,6 +74,26 @@ void simpleRayTracing(
     }
 }
 
+vector<flat*> createFlatArray(vector<vector<double>> &vertices,
+                              vector<vector<int>> &flats)
+{
+    vector<flat*> elements(flats.size(), nullptr);
+    for (int i = 0 ; i < flats.size() ; i++) {
+        elements[i] = new flat(
+                new point(vertices[flats[i][0]][0],
+                          vertices[flats[i][0]][1],
+                          vertices[flats[i][0]][2]),
+                new point(vertices[flats[i][1]][0],
+                          vertices[flats[i][1]][1],
+                          vertices[flats[i][1]][2]),
+                new point(vertices[flats[i][2]][0],
+                          vertices[flats[i][2]][1],
+                          vertices[flats[i][2]][2]),
+                i
+        );
+    }
+    return elements;
+}
 
 // Möller–Trumbore intersection algorithm
 double rayIntersectTriangle(
@@ -89,19 +114,19 @@ double rayIntersectTriangle(
 
     vector<double> h = crossProduct(dir, edge2);
     double a = dotProduct(edge1, h);
-    if (a > -E && a < E) return 0;
+    if (a > -E && a < E) return -1;
 
     double f = 1/a;
     vector<double> s = subtract(rayOrigin, vertex0);
     double u = f * dotProduct(s, h);
-    if (u < 0 || u > 1) return -0;
+    if (u < 0 || u > 1) return -1;
 
     vector<double> q = crossProduct(s, edge1);
     double v = f * dotProduct(dir, q);
-    if (v < 0 || u + v > 1) return 0;
+    if (v < 0 || u + v > 1) return -1;
 
     double t = f * dotProduct(edge2, q);
     if (abs(t) > E) {
         return abs(t);
-    } else return 0;
+    } else return -1;
 }

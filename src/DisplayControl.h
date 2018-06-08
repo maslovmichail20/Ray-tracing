@@ -8,7 +8,7 @@ using namespace std;
 
 class DisplayControl {
 public:
-    DisplayControl(vector<double>&, vector<double>&, string);
+    DisplayControl(vector<double>&, vector<double>&);
     vector<double> camera;
     vector<double> light;
     vector<vector<double>> canvas;

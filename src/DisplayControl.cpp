@@ -7,33 +7,34 @@ using namespace std;
 
 DisplayControl::DisplayControl(
         vector<double> &min,
-        vector<double> &max,
-        string resolution
+        vector<double> &max
 ) {
-    width = 1;
-    height = 1;
+    width = 2;
+    height = 2;
 
     widthPx = 500;
     heightPx = 500;
 
     vector<double> empty(3, 0);
     camera = empty;
-    camera[0] = 0;
-    camera[1] = 1001;
+    camera[0] = 1.5;
+    camera[1] = -1;
     camera[2] = 0;
 
     vector<vector<double>> empty2(2, empty);
     canvas = empty2;
-    canvas[0][0] = -0.5;
-    canvas[0][1] = 1000;
-    canvas[0][2] = -0.5;
+    canvas[0][0] = 0.75;
+    canvas[0][1] = -1;
+    canvas[0][2] = -1;
 
-    canvas[1][0] = 0.5;
-    canvas[1][1] = 1000;
-    canvas[1][2] = 0.5;
+    canvas[1][0] = 0.75;
+    canvas[1][1] = 1;
+    canvas[1][2] = 1;
 
-    dx = width/widthPx;
-    dy = 0;
+    light = canvas[0];
+
+    dx = 0;
+    dy = width/widthPx;
     dz = height/heightPx;
 }
 

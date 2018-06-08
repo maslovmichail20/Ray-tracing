@@ -3,16 +3,16 @@
 
 #include <iostream>
 
-float comparator(float, float, float, int);
+double comparator(double, double, double, int);
 
 struct point{
-  float *coor = new float[3];
+  double *coor = new double[3];
   point(){
     coor[0] = 0;
     coor[1] = 0;
     coor[2] = 0;
   }
-  point(float x, float y, float z){
+  point(double x, double y, double z){
     coor[0] = x;
     coor[1] = y;
     coor[2] = z;
@@ -30,7 +30,8 @@ struct flat{
   point* p3;
   point* min_p;
   point* max_p;
-  flat(point* _p1, point* _p2, point* _p3){
+  int flatIndex;
+  flat(point* _p1, point* _p2, point* _p3, int j){
     min_p = new point();
     max_p = new point();
     p1 = _p1;
@@ -40,6 +41,7 @@ struct flat{
       min_p -> coor[i] = comparator(_p1 -> coor[i], _p2 -> coor[i], _p3 -> coor[i], 0);
       max_p -> coor[i] = comparator(_p1 -> coor[i], _p2 -> coor[i], _p3 -> coor[i], 1);
     }
+    flatIndex = j;
   }
 };
 
