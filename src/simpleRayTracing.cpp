@@ -27,13 +27,15 @@ void simpleRayTracing(
     point* max_p = new point(max[0], max[1], max[2]);
     node* root = new node(0, min_p, max_p);
     build_tree(createFlatArray(vertices, flats), root, 0, 0);
+    cout << "BUILT!" << endl;
 
     point* camera = new point(dc->camera[0], dc->camera[1], dc->camera[2]);
 
     for (int i = 0 ; i < dc->heightPx ; i++) {
         double curX = x; double curY = y;
         for (int j = 0 ; j < dc->widthPx ; j++) {
-            curX += dx; curY += dy;
+
+            curX -= dx; curY += dy;
             point* curPoint = new point(curX, curY, z);
 
             vector<flat*> res;
