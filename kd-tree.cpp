@@ -7,8 +7,8 @@
 #include "geometry.h"
 #include "kd-tree.h"
 
-void build_tree(vector<flat*> elms, node* obj, int axis, int *count){
-  (*count)++;
+void build_tree(vector<flat*> elms, node* obj, int axis, int count, int* c){
+  //(*c)++;
   quick_sort_first(elms, 0, elms.size() - 1, axis);
   int middle = elms.size() / 2;
   obj -> delimiter = elms[middle] -> min_p -> coor[axis];
@@ -27,6 +27,8 @@ void build_tree(vector<flat*> elms, node* obj, int axis, int *count){
     }
   }
 
+  int n_ax = axis == 2 ? 0 : (axis + 1);
+
   if ((l.size() != 0 || r.size() != 0)  && l.size() != elms.size() && r.size() != elms.size() ){
 
     point *middle_l = new point(obj -> max -> coor[0], obj -> max -> coor[1], obj -> max -> coor[2]);
@@ -35,14 +37,21 @@ void build_tree(vector<flat*> elms, node* obj, int axis, int *count){
     middle_l -> coor[axis] = obj -> delimiter;
     middle_r -> coor[axis] = obj -> delimiter;
 
-    int n_ax = axis == 2 ? 0 : (axis + 1);
     obj -> left = new node(n_ax, obj -> min, middle_l);
     obj -> right = new node(n_ax, middle_r, obj -> max);
 
-    build_tree(l, obj -> left, n_ax, count);
-    build_tree(r, obj -> right, n_ax, count);
+    (*c)+=2;
 
-  } else obj -> elements = elms;
+    build_tree(l, obj -> left, n_ax, 0, c);
+    build_tree(r, obj -> right, n_ax, 0, c);
+
+  } else{
+    if (count < 2){
+      build_tree(elms, obj, n_ax, ++count, c);
+    } else {
+      obj -> elements = elms;
+    }
+  }
 }
 
 vector<flat*> search_in_tree(point* A, point* B, node* obj){

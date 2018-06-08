@@ -21,7 +21,7 @@ void simpleRayTracing(
 
     int *count = new int;
     *count = 0;
-    build_tree(v, root, 0, count);
+    build_tree(v, root, 0, 0, count);
 
 
     cout << "Built " << *count << " nodes" << endl;
@@ -44,6 +44,7 @@ void simpleRayTracing(
 
             if(ray_in_box(camera, curP, root -> min, root -> max)!= INT_MAX){
                resFlats = search_in_tree(camera, curP, root);
+               //cout << resFlats.size() << endl;
             }
 
             vector<double> curPoint(3, 0);

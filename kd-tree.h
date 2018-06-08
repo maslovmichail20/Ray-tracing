@@ -28,7 +28,7 @@ struct node{
   }
 };
 
-void build_tree(vector<flat*>, node*, int, int*);
+void build_tree(vector<flat*>, node*, int, int, int*);
 
 vector<flat*> search_in_tree(point*, point*, node*);
 
