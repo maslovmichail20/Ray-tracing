@@ -60,15 +60,16 @@ void simpleRayTracing(
             }
 
             if (numberOfNearest > -1 && distance != 10000) {
-                int rgb = getColor(
+                vector<int> rgb = getColor(
                         dc->camera,
                         cp,
                         dc->light,
                         distance,
-                        normals[numberOfNearest]
+                        normals[numberOfNearest],
+                        dc->rgb
                 );
 
-                bmp->set_pixel(j, i, 0, 0, rgb);
+                bmp->set_pixel(j, i, rgb[0], rgb[1], rgb[2]);
             }
         }
         z -= dz;

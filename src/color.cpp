@@ -3,12 +3,13 @@
 
 using namespace std;
 
-int getColor(
+vector<int> getColor(
         vector<double> &camera,
         vector<double> &point,
         vector<double> &light,
         double distance,
-        vector<double> &normal
+        vector<double> &normal,
+        vector<int> &rgb
 ) {
     vector<double> direction(3, 0);
     for (int i = 0 ; i < 3 ; i++) {
@@ -30,5 +31,9 @@ int getColor(
 
     double angleCos = cosBetweenVectors(normal, lightV);
 
-    return int(244 - 190*angleCos);
+    vector<int> color(3, 0);
+    for (int i = 0 ; i < 3 ; i++) {
+        color[i] = int(rgb[i] - rgb[i]*0.7*angleCos);
+    }
+    return color;
 }

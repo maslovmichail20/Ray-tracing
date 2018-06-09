@@ -9,8 +9,11 @@ using namespace std;
 DisplayControl::DisplayControl(
         vector<double> &min,
         vector<double> &max,
-        int angle_in_deg
+        int angle_in_deg,
+        vector<int> &color
 ) {
+    rgb = color;
+
     double angle = (PI*angle_in_deg)/180;
     double R = 0;
 
@@ -49,6 +52,9 @@ DisplayControl::DisplayControl(
     dz = height/heightPx;
 }
 
-// DisplayControl::~DisplayControl() {
-//
-// }
+ DisplayControl::~DisplayControl() {
+    camera.clear();
+    canvas.clear();
+    light.clear();
+    rgb.clear();
+ }

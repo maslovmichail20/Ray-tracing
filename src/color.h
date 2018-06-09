@@ -6,12 +6,13 @@
 
 using namespace std;
 
-int getColor(
+vector<int> getColor(
         vector<double>&,
         vector<double>&,
         vector<double>&,
         double,
-        vector<double>&
+        vector<double>&,
+        vector<int>&
 );
 
 

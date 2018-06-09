@@ -2,16 +2,16 @@
 #define ASSIGNMENT_6_ADM_CREATECANVAS_H
 
 #include <vector>
-#include <string>
 
 using namespace std;
 
 class DisplayControl {
 public:
-    DisplayControl(vector<double>&, vector<double>&, int);
+    DisplayControl(vector<double>&, vector<double>&, int, vector<int>&);
     vector<double> camera;
     vector<double> light;
     vector<vector<double>> canvas;
+    vector<int> rgb;
     unsigned int widthPx;
     unsigned int heightPx;
     double width;
