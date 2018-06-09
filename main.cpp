@@ -29,9 +29,9 @@ int main(int argc, char* argv[]) {
         if (argv[3]) angle = atoi(argv[3]);
 
         vector<int> rgb(3, 0);
-        if (argv[5]) rgb[0] = atoi(argv[5]) == 0 ? 224 : atoi(argv[5]);
-        if (argv[6]) rgb[1] = atoi(argv[6]) == 0 ? 224 : atoi(argv[6]);
-        if (argv[7]) rgb[2] = atoi(argv[7]) == 0 ? 224 : atoi(argv[7]);
+        if (argv[5]) rgb[0] = atoi(argv[5]);
+        if (argv[6]) rgb[1] = atoi(argv[6]);
+        if (argv[7]) rgb[2] = atoi(argv[7]);
 
         DisplayControl *DC = new DisplayControl(
                 minCoordinate, maxCoordinate, angle, rgb
